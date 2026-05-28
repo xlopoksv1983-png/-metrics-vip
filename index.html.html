@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Метрики">
+<title>Метрики · VIP.SV.HOME</title>
+<style>
+:root{--gold:#CFB050;--gold2:#e8c860;--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;--text:#f0f0f0;--muted:rgba(255,255,255,.45);--border:rgba(255,255,255,.08);--tiktok:#fe2c55;--fb:#1877f2;--ig:#e1306c;--yt:#ff0000;--safe-t:env(safe-area-inset-top,44px);--safe-b:env(safe-area-inset-bottom,20px);}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
+.safe-t{height:var(--safe-t);background:var(--bg2);flex-shrink:0;}
+.safe-b{height:var(--safe-b);background:var(--bg);flex-shrink:0;}
+.hdr{flex-shrink:0;background:var(--bg2);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:.5px solid rgba(207,176,80,.2);}
+.hdr-logo{font-size:16px;font-weight:700;color:var(--gold);}
+.hdr-date{font-size:12px;color:var(--muted);margin-top:2px;}
+.hdr-btn{background:rgba(207,176,80,.12);border:.5px solid rgba(207,176,80,.3);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--gold);cursor:pointer;font-family:inherit;}
+.tabs{flex-shrink:0;display:flex;background:var(--bg2);border-bottom:.5px solid rgba(207,176,80,.12);}
+.tab{flex:1;padding:11px 4px;text-align:center;font-size:11px;font-weight:500;color:var(--muted);border:none;background:transparent;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;}
+.tab.on{color:var(--gold);border-bottom:2px solid var(--gold);}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 20px;}
+.pane{display:none;}.pane.on{display:block;}
+.slbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(207,176,80,.55);margin:14px 0 8px;}
+.date-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.date-row input[type=date]{flex:1;background:var(--bg3);border:.5px solid var(--border);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--text);font-family:inherit;outline:none;}
+.date-row input:focus{border-color:rgba(207,176,80,.4);}
+.save-btn{background:var(--gold);border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;color:#0a0a0a;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.save-btn:active{background:var(--gold2);}
+.platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.pcard{background:var(--bg3);border-radius:14px;padding:14px;border:.5px solid var(--border);}
+.pc-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.pc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.pc-name{font-size:13px;font-weight:600;}
+.field{margin-bottom:8px;}.field:last-child{margin-bottom:0;}
+.field label{font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.04em;display:block;margin-bottom:3px;}
+.field input{width:100%;background:var(--bg4);border:.5px solid var(--border);border-radius:8px;padding:8px 10px;font-size:15px;font-weight:600;color:var(--text);font-family:inherit;outline:none;text-align:center;}
+.field input:focus{border-color:rgba(207,176,80,.4);}
+.sum-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
+.sum-card{background:var(--bg3);border-radius:12px;padding:12px 14px;}
+.pos{color:#5ECFAA;}.neg{color:#FF7A5A;}.neu{color:var(--muted);}
+.chart-card{background:var(--bg3);border-radius:14px;padding:14px;margin-bottom:10px;}
+.chart-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.chart-sub{font-size:11px;color:var(--muted);}
+.chart-wrap{height:100px;display:flex;align-items:flex-end;gap:4px;padding-bottom:4px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.bar{width:100%;border-radius:3px 3px 0 0;min-height:3px;}
+.bar-lbl{font-size:9px;color:var(--muted);white-space:nowrap;}
+.hist-table{width:100%;border-collapse:collapse;font-size:12px;}
+.hist-table th{background:var(--bg4);padding:8px 10px;text-align:center;font-size:10px;font-weight:600;letter-spacing:.04em;color:var(--muted);border-bottom:.5px solid var(--border);}
+.hist-table td{padding:8px 10px;text-align:center;border-bottom:.5px solid var(--border);}
+.hist-table tr:last-child td{border:none;}
+.pf-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.pf-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:inherit;}
+.pf-btn.off{opacity:.3;}
+.total-row{background:var(--bg3);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.total-item{text-align:center;}
+.total-val{font-size:20px;font-weight:700;color:var(--gold);}
+.total-lbl{font-size:10px;color:var(--muted);margin-top:2px;}
+.install-tip{background:rgba(207,176,80,.08);border:.5px solid rgba(207,176,80,.25);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--muted);line-height:1.6;}
+.install-tip strong{color:var(--gold);}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="safe-t"></div>
+<div class="hdr">
+  <div><div class="hdr-logo">📊 Метрики VIP.SV.HOME</div><div class="hdr-date" id="hDate"></div></div>
+  <div><button class="hdr-btn" onclick="exportCSV()">Експорт CSV</button></div>
+</div>
+<div class="tabs">
+  <button class="tab on" onclick="goTab('enter',this)">Внести</button>
+  <button class="tab" onclick="goTab('analytics',this)">Аналітика</button>
+  <button class="tab" onclick="goTab('history',this)">Історія</button>
+</div>
+<div class="scroll">
+
+<div class="pane on" id="pane-enter">
+  <div class="install-tip" id="itip" style="display:none"><strong>📱 Встановити на iPad:</strong> Safari → кнопка □↑ → «На екран «Домів»» → «Додати»</div>
+  <div class="slbl">Дата запису</div>
+  <div class="date-row">
+    <input type="date" id="entryDate">
+    <button class="save-btn" onclick="saveEntry()">Зберегти ✓</button>
+  </div>
+  <div class="platform-grid">
+    <div class="pcard" style="border-top:2px solid var(--tiktok)">
+      <div class="pc-head"><div class="pc-dot" style="background:var(--tiktok)"></div><div class="pc-name">TikTok</div></div>
+      <div class="field"><label>Відео за день</label><input type="number" id="tt_videos" placeholder="0" min="0"></div>
+      <div class="field"><label>Перегляди всього</label><input type="number" id="tt_views" placeholder="0" min="0"></div>
+      <div class="field"><label>Підписники всього</label><input type="number" id="tt_followers" placeholder="0" min="0"></div>
+      <div class="field"><label>Нових за день</label><input type="number" id="tt_new" placeholder="0" min="0"></div>
+    </div>
+    <div class="pcard" style="border-top:2px solid var(--ig)">
+      <div class="pc-head"><div class="pc-dot" style="background:var(--ig)"></div><div class="pc-name">Instagram</div></div>
+      <div class="field"><label>Відео за день</label><input type="number" id="ig_videos" placeholder="0" min="0"></div>
+      <div class="field"><label>Перегляди всього</label><input type="number" id="ig_views" placeholder="0" min="0"></div>
+      <div class="field"><label>Підписники всього</label><input type="number" id="ig_followers" placeholder="0" min="0"></div>
+      <div class="field"><label>Нових за день</label><input type="number" id="ig_new" placeholder="0" min="0"></div>
+    </div>
+    <div class="pcard" style="border-top:2px solid var(--fb)">
+      <div class="pc-head"><div class="pc-dot" style="background:var(--fb)"></div><div class="pc-name">Facebook</div></div>
+      <div class="field"><label>Відео за день</label><input type="number" id="fb_videos" placeholder="0" min="0"></div>
+      <div class="field"><label>Перегляди всього</label><input type="number" id="fb_views" placeholder="0" min="0"></div>
+      <div class="field"><label>Підписники всього</label><input type="number" id="fb_followers" placeholder="0" min="0"></div>
+      <div class="field"><label>Нових за день</label><input type="number" id="fb_new" placeholder="0" min="0"></div>
+    </div>
+    <div class="pcard" style="border-top:2px solid var(--yt)">
+      <div class="pc-head"><div class="pc-dot" style="background:var(--yt)"></div><div class="pc-name">YouTube Shorts</div></div>
+      <div class="field"><label>Відео за день</label><input type="number" id="yt_videos" placeholder="0" min="0"></div>
+      <div class="field"><label>Перегляди всього</label><input type="number" id="yt_views" placeholder="0" min="0"></div>
+      <div class="field"><label>Підписники всього</label><input type="number" id="yt_followers" placeholder="0" min="0"></div>
+      <div class="field"><label>Нових за день</label><input type="number" id="yt_new" placeholder="0" min="0"></div>
+    </div>
+  </div>
+  <div id="saveMsg" style="text-align:center;font-size:14px;font-weight:600;color:#5ECFAA;padding:10px;display:none;background:rgba(94,207,170,.08);border-radius:10px;margin-top:4px;">✓ Дані збережено!</div>
+</div>
+
+<div class="pane" id="pane-analytics">
+  <div class="slbl">Підсумок сьогодні</div>
+  <div class="total-row">
+    <div class="total-item"><div class="total-val" id="tot_videos">0</div><div class="total-lbl">Відео</div></div>
+    <div class="total-item"><div class="total-val" id="tot_views">0</div><div class="total-lbl">Перегляди</div></div>
+    <div class="total-item"><div class="total-val" id="tot_new">0</div><div class="total-lbl">Нових</div></div>
+    <div class="total-item"><div class="total-val" id="tot_days">0</div><div class="total-lbl">Днів</div></div>
+  </div>
+  <div class="slbl">По платформах (сьогодні)</div>
+  <div class="sum-grid" id="platformSummary"></div>
+  <div class="slbl">Відео за 7 днів</div>
+  <div class="chart-card">
+    <div class="chart-title">Контент <span class="chart-sub">останні 7 днів</span></div>
+    <div class="chart-wrap" id="chartVideos"></div>
+  </div>
+  <div class="slbl">Нові підписники за 7 днів</div>
+  <div class="chart-card">
+    <div class="chart-title">Підписники <span class="chart-sub">останні 7 днів</span></div>
+    <div class="chart-wrap" id="chartFollowers"></div>
+  </div>
+</div>
+
+<div class="pane" id="pane-history">
+  <div class="slbl">Платформа</div>
+  <div class="pf-row">
+    <button class="pf-btn on" style="background:var(--tiktok);color:#fff" onclick="setPF('tt',this)">TikTok</button>
+    <button class="pf-btn on" style="background:var(--ig);color:#fff" onclick="setPF('ig',this)">Instagram</button>
+    <button class="pf-btn on" style="background:var(--fb);color:#fff" onclick="setPF('fb',this)">Facebook</button>
+    <button class="pf-btn on" style="background:var(--yt);color:#fff" onclick="setPF('yt',this)">YouTube</button>
+  </div>
+  <div id="histTable"></div>
+  <button style="width:100%;margin-top:12px;background:transparent;border:.5px solid rgba(255,255,255,.12);border-radius:10px;padding:13px;color:var(--muted);font-size:13px;cursor:pointer;font-family:inherit;" onclick="if(confirm('Видалити всі дані?')){localStorage.clear();location.reload();}">🗑 Очистити всі дані</button>
+</div>
+
+</div>
+<div class="safe-b"></div>
+</div>
+<script>
+const PL=[{id:'tt',name:'TikTok',color:'#fe2c55'},{id:'ig',name:'Instagram',color:'#e1306c'},{id:'fb',name:'Facebook',color:'#1877f2'},{id:'yt',name:'YouTube',color:'#ff0000'}];
+const FLD=['videos','views','followers','new'];
+const DUA=['Нд','Пн','Вт','Ср','Чт','Пт','Сб'];
+const MON=['січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
+let aPF={tt:1,ig:1,fb:1,yt:1};
+const lg=k=>{try{return JSON.parse(localStorage.getItem(k))}catch{return null}};
+const ls=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const gd=()=>lg('mv1')||{};
+const sd=d=>ls('mv1',d);
+const today=()=>new Date().toISOString().slice(0,10);
+const fmt=(s)=>{const d=new Date(s+'T12:00:00');return DUA[d.getDay()]+' '+d.getDate()+' '+MON[d.getMonth()];};
+const fmtn=n=>{n=parseInt(n)||0;if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n||'0';};
+
+const now=new Date();
+document.getElementById('hDate').textContent=DUA[now.getDay()]+', '+now.getDate()+' '+MON[now.getMonth()]+' 2026';
+document.getElementById('entryDate').value=today();
+if(/iPad|iPhone/.test(navigator.userAgent)&&!navigator.standalone)document.getElementById('itip').style.display='block';
+
+function loadFor(dt){
+  const e=(gd()[dt])||{};
+  PL.forEach(p=>FLD.forEach(f=>{const el=document.getElementById(p.id+'_'+f);if(el)el.value=(e[p.id]&&e[p.id][f])||'';}));
+}
+loadFor(today());
+document.getElementById('entryDate').addEventListener('change',e=>loadFor(e.target.value));
+
+function saveEntry(){
+  const dt=document.getElementById('entryDate').value;if(!dt)return;
+  const data=gd();if(!data[dt])data[dt]={};
+  PL.forEach(p=>{data[dt][p.id]={};FLD.forEach(f=>{data[dt][p.id][f]=parseInt(document.getElementById(p.id+'_'+f).value)||0;});});
+  sd(data);
+  const m=document.getElementById('saveMsg');m.style.display='block';setTimeout(()=>m.style.display='none',2500);
+  try{const c=new AudioContext(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(660,c.currentTime);o.frequency.exponentialRampToValueAtTime(880,c.currentTime+.1);g.gain.setValueAtTime(.25,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.18);o.start();o.stop(c.currentTime+.2);}catch(e){}
+}
+
+function goTab(n,b){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.getElementById('pane-'+n).classList.add('on');b.classList.add('on');
+  document.querySelector('.scroll').scrollTop=0;
+  if(n==='analytics')renderA();
+  if(n==='history')renderH();
+}
+
+function renderA(){
+  const data=gd(),dates=Object.keys(data).sort(),td=today(),tdd=data[td]||{};
+  let tv=0,tvw=0,tn=0;
+  PL.forEach(p=>{tv+=parseInt((tdd[p.id]||{}).videos)||0;tvw+=parseInt((tdd[p.id]||{}).views)||0;tn+=parseInt((tdd[p.id]||{}).new)||0;});
+  document.getElementById('tot_videos').textContent=tv;
+  document.getElementById('tot_views').textContent=fmtn(tvw);
+  document.getElementById('tot_new').textContent=tn;
+  document.getElementById('tot_days').textContent=dates.length;
+  const ps=document.getElementById('platformSummary');ps.innerHTML='';
+  PL.forEach(p=>{
+    const d=tdd[p.id]||{};
+    let delta='';
+    if(dates.length>=2){const prev=dates[dates.length-2],pd=(data[prev]||{})[p.id]||{},diff=(parseInt(d.followers)||0)-(parseInt(pd.followers)||0);
+      delta=diff>0?`<span class="pos">▲${diff}</span>`:diff<0?`<span class="neg">▼${Math.abs(diff)}</span>`:`<span class="neu">−</span>`;}
+    ps.innerHTML+=`<div class="sum-card" style="border-left:3px solid ${p.color}">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px"><div style="width:8px;height:8px;border-radius:50%;background:${p.color}"></div><div style="font-size:12px;font-weight:700">${p.name}</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><div style="font-size:20px;font-weight:700;color:var(--gold)">${d.videos||0}</div><div style="font-size:10px;color:var(--muted)">відео</div></div>
+        <div><div style="font-size:20px;font-weight:700;color:#5ECFAA">+${d.new||0}</div><div style="font-size:10px;color:var(--muted)">нових</div></div>
+        <div><div style="font-size:16px;font-weight:700">${fmtn(d.views)}</div><div style="font-size:10px;color:var(--muted)">перегляди</div></div>
+        <div><div style="font-size:16px;font-weight:700">${fmtn(d.followers)}</div><div style="font-size:10px;color:var(--muted)">підписники ${delta}</div></div>
+      </div></div>`;
+  });
+  const l7=dates.slice(-7);
+  renderChart('chartVideos',l7,data,'videos','#CFB050');
+  renderChart('chartFollowers',l7,data,'new','#5ECFAA');
+}
+
+function renderChart(cid,dates,data,field,color){
+  const el=document.getElementById(cid);if(!el)return;
+  const vals=dates.map(dt=>PL.reduce((s,p)=>s+(parseInt(((data[dt]||{})[p.id]||{})[field])||0),0));
+  const mx=Math.max(...vals,1);el.innerHTML='';
+  const d2=[...dates],v2=[...vals];
+  while(d2.length<7){d2.unshift('');v2.unshift(0);}
+  d2.forEach((dt,i)=>{
+    const pct=Math.max((v2[i]/mx)*90,v2[i]>0?4:0);
+    const lbl=dt?fmt(dt).slice(0,5):'';
+    const c=document.createElement('div');c.className='bar-col';
+    c.innerHTML=`<div class="bar" style="height:${pct}%;background:${color};opacity:${i===d2.length-1?1:.45}"></div><div class="bar-lbl">${lbl||'—'}</div>`;
+    el.appendChild(c);
+  });
+}
+
+function setPF(id,btn){aPF[id]=!aPF[id];btn.classList.toggle('off');renderH();}
+
+function renderH(){
+  const data=gd(),dates=Object.keys(data).sort().reverse(),el=document.getElementById('histTable');
+  if(!el)return;
+  if(!dates.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);font-size:13px;">Ще немає записів 🙂</div>';return;}
+  let h=`<table class="hist-table"><thead><tr><th style="text-align:left;padding-left:8px">Дата / Платформа</th><th>Відео</th><th>Перегляди</th><th>Підписники</th><th>Нових</th></tr></thead><tbody>`;
+  dates.forEach(dt=>{
+    PL.forEach(p=>{
+      if(!aPF[p.id])return;
+      const d=(data[dt]||{})[p.id]||{};
+      if(!d.videos&&!d.views&&!d.followers&&!d.new)return;
+      h+=`<tr><td style="text-align:left"><div style="color:var(--gold);font-weight:600;font-size:12px">${fmt(dt)}</div><div style="display:flex;align-items:center;gap:4px;margin-top:3px"><span style="width:6px;height:6px;border-radius:50%;background:${p.color};display:inline-block"></span><span style="font-size:10px;color:var(--muted)">${p.name}</span></div></td>
+      <td style="color:var(--gold);font-weight:600">${d.videos||0}</td>
+      <td>${fmtn(d.views)}</td>
+      <td>${fmtn(d.followers)}</td>
+      <td style="color:#5ECFAA;font-weight:600">+${d.new||0}</td></tr>`;
+    });
+  });
+  h+='</tbody></table>';el.innerHTML=h;
+}
+
+function exportCSV(){
+  const data=gd(),dates=Object.keys(data).sort();
+  let csv='Дата,Платформа,Відео,Перегляди,Підписники,Нових\n';
+  dates.forEach(dt=>PL.forEach(p=>{const d=(data[dt]||{})[p.id]||{};csv+=`${dt},${p.name},${d.videos||0},${d.views||0},${d.followers||0},${d.new||0}\n`;}));
+  const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download='metrics_vip.csv';a.click();URL.revokeObjectURL(u);
+}
+</script>
+</body>
+</html>
